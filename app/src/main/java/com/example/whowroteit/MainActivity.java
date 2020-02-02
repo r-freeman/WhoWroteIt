@@ -1,6 +1,10 @@
 package com.example.whowroteit;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -11,7 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
     private EditText mBookInput;
     private TextView mTitleText;
     private TextView mAuthorText;
@@ -46,7 +50,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (networkInfo != null && networkInfo.isConnected()) {
-            new FetchBook(mTitleText, mAuthorText).execute(queryString);
+            Bundle queryBundle = new Bundle();
+            queryBundle.putString("queryString", queryString);
+            getSupportLoaderManager().restartLoader(0, queryBundle, this);
+
+//            new FetchBook(mTitleText, mAuthorText).execute(queryString);
             mAuthorText.setText("");
             mTitleText.setText(R.string.loading);
         } else {
@@ -58,5 +66,21 @@ public class MainActivity extends AppCompatActivity {
                 mTitleText.setText(R.string.no_network);
             }
         }
+    }
+
+    @NonNull
+    @Override
+    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<String> loader) {
+
     }
 }
